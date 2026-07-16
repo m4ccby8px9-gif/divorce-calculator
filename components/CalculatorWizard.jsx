@@ -116,9 +116,9 @@ export default function CalculatorWizard() {
   <div className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-4 py-1.5 mb-3">
     <span className="text-xs font-semibold text-white uppercase tracking-wide">California Family Code § 4055</span>
   </div>
-  <h1 className="text-3xl font-extrabold text-slate-900">California Child Support</h1>
+  <h1 className="text-3xl font-extrabold text-slate-900">California Child Support and Spousal Support</h1>
   <h1 className="text-3xl font-extrabold text-blue-600">Calculator</h1>
-  <p className="mt-2 text-sm text-slate-500">Enter your financial information below to get an estimated monthly support amount.</p>
+  <p className="mt-2 text-sm text-slate-500">Enter your financial information below to get an estimated monthly child and spousal support amount.</p>
 </div>
         <ProgressBar steps={STEPS} currentStep={currentStep} />
 

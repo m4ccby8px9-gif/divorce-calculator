@@ -1,12 +1,25 @@
 "use client";
 
 import { calculateChildSupport } from "../../lib/childSupportCalculator";
+import { calculateTemporarySpousalSupport } from "../../lib/spousalSupportCalculator";
 import { Scale, DollarSign, Calculator, ChevronDown, ChevronUp, AlertCircle } from "lucide-react";
 import { useState } from "react";
 
 export default function StepResults({ formData, resetForm }) {
   const [showBreakdown, setShowBreakdown] = useState(false);
   const result = calculateChildSupport(formData);
+  const highEarnerNet = result.parentA.isHighEarner
+    ? result.parentA.netDisposable
+    : result.parentB.netDisposable;
+  const lowEarnerNet = result.parentA.isHighEarner
+    ? result.parentB.netDisposable
+    : result.parentA.netDisposable;
+
+  const spousalSupport = calculateTemporarySpousalSupport({
+    highEarnerNet,
+    lowEarnerNet,
+    childSupport: result.childSupportAmount,
+  });
 
   return (
     <div className="space-y-6">
@@ -29,6 +42,33 @@ export default function StepResults({ formData, resetForm }) {
           Based on CA Family Code § 4055 — CS = K[HN − (H%)(TN)]
         </p>
       </div>
+      <div className="rounded-2xl border-2 border-indigo-200 bg-indigo-50 px-6 py-8 text-center">
+          <div className="flex items-center justify-center gap-2 text-indigo-700">
+            <DollarSign size={20} />
+            <p className="text-sm font-semibold uppercase tracking-wide">
+              Estimated Temporary Spousal Support
+            </p>
+          </div>
+          <p className="mt-3 text-5xl font-bold text-indigo-900">
+            {formatCurrency(spousalSupport)}
+          </p>
+          <p className="mt-3 text-sm text-indigo-700">
+            <span className="font-semibold">{result.payorName}</span> pays{" "}
+            <span className="font-semibold">{result.payeeName}</span> per month
+          </p>
+          <p className="mt-1 text-xs text-indigo-600">
+          Santa Clara guideline — 40% of the high earner net minus 50% of the low earner net, after child support
+          </p>
+        </div>
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <p className="text-xs text-amber-800">
+            <span className="font-semibold">This is a temporary estimate only.</span>{" "}
+            Temporary spousal support applies while a divorce is pending. Long-term
+            support after judgment has no formula — a judge decides it using the
+            factors in Family Code § 4320. Courts also vary by county and may use
+            different guidelines. This tool is not legal advice.
+          </p>
+        </div>
 
       <div className="grid grid-cols-2 gap-4">
         <NetIncomeCard
